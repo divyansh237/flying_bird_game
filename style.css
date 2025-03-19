@@ -1,0 +1,86 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: skyblue;
+}
+
+#game-container {
+    position: relative;
+    width: 400px;
+    height: 500px;
+    background-color: lightblue;
+    overflow: hidden;
+    border: 2px solid black;
+}
+
+#bird {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    background-color: yellow;
+    border-radius: 50%;
+    top: 200px;
+    left: 50px;
+}
+
+.pipe {
+    position: absolute;
+    width: 50px;
+    background-color: green;
+}
+
+.upper-pipe {
+    top: 0;
+}
+
+.lower-pipe {
+    bottom: 0;
+}
+
+#score {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+#skills {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+}
+
+button {
+    padding: 15px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    background-color: #ff9800;
+    color: white;
+    border-radius: 8px;
+    transition: 0.3s;
+}
+
+button:hover {
+    background-color: #e68900;
+}
+
+@media (max-width: 600px) {
+    button {
+        font-size: 14px;
+        padding: 12px;
+    }
+}
