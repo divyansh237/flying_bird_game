@@ -36,7 +36,7 @@ function createPipes() {
     if (isGameOver) return;
 
     let pipeHeight = Math.random() * 150 + 100;
-    let upperPipeHeight = 500 - pipeHeight - gap;
+    let upperPipeHeight = 400 - pipeHeight - gap;
 
     let upperPipe = document.createElement("div");
     let lowerPipe = document.createElement("div");
