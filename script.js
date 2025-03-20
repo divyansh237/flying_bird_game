@@ -11,6 +11,7 @@ let pipeSpeed = 2;
 let level = 1;
 let shieldActive = false;
 let slowMotionActive = false;
+let pipeInterval = 1500; // ⏳ Pipe generation interval
 const gap = 150;
 
 // 🕹 Jump function (Works on keyboard & touch)
@@ -69,6 +70,7 @@ function createPipes() {
             if (birdY < upperPipeHeight || birdY + 40 > 500 - pipeHeight) {
                 if (shieldActive) {
                     shieldActive = false;
+                    removeGlow();
                     upperPipe.remove();
                     lowerPipe.remove();
                 } else {
@@ -88,6 +90,11 @@ function createPipes() {
             if (score % 5 === 0) {
                 pipeSpeed += 0.5;
                 level++;
+                
+                if (pipeInterval > 800) { // ⏳ Pipe generate speed bhi increase hogi
+                    pipeInterval -= 100;
+                    restartPipeGeneration();
+                }
             }
         }
     }, 20);
@@ -114,25 +121,47 @@ function endGame() {
     location.reload();
 }
 
-// 🛡 Shield Skill Activation
+// 🛡 Shield Skill Activation (🔵 Blue Glow)
 function useShield() {
     if (!shieldActive) {
         shieldActive = true;
+        bird.classList.add("blue-glow"); // 🔵 Blue Glow Effect
         alert("🛡 Shield Activated! You can survive one hit.");
-    }
-}
 
-// 🐢 Slow Motion Skill Activation
-function useSlowMotion() {
-    if (!slowMotionActive) {
-        slowMotionActive = true;
-        alert("🐢 Slow Motion Activated! Pipes will move slower for 5 seconds.");
         setTimeout(() => {
-            slowMotionActive = false;
+            shieldActive = false;
+            removeGlow(); // ❌ Glow Remove
         }, 5000);
     }
 }
 
+// 🐢 Slow Motion Skill Activation (🟢 Green Glow)
+function useSlowMotion() {
+    if (!slowMotionActive) {
+        slowMotionActive = true;
+        bird.classList.add("green-glow"); // 🟢 Green Glow Effect
+        alert("🐢 Slow Motion Activated! Pipes will move slower for 5 seconds.");
+
+        setTimeout(() => {
+            slowMotionActive = false;
+            removeGlow(); // ❌ Glow Remove
+        }, 5000);
+    }
+}
+
+// ❌ Remove Glow After Skill Ends
+function removeGlow() {
+    bird.classList.remove("blue-glow");
+    bird.classList.remove("green-glow");
+}
+
+// 🔄 Dynamic Pipe Generation (Restart on Interval Change)
+let pipeGeneration;
+function restartPipeGeneration() {
+    clearInterval(pipeGeneration);
+    pipeGeneration = setInterval(createPipes, pipeInterval);
+}
+
 // ✅ Start Game Loops
 setInterval(updateGame, 20);
-setInterval(createPipes, 1500);
+restartPipeGeneration();
