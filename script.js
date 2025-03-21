@@ -1,8 +1,9 @@
-const bird = document.getElementById("bird");
+const car = document.getElementById("car");
 const gameContainer = document.getElementById("game-container");
 const scoreDisplay = document.getElementById("score");
+const bgMusic = document.getElementById("bg-music");
 
-let birdY = 200;
+let carY = 200;
 let velocity = 0;
 let gravity = 0.5;
 let isGameOver = false;
@@ -104,14 +105,14 @@ function createPipes() {
 function updateGame() {
     if (isGameOver) return;
 
-    birdY += velocity;
+    carY += velocity;
     velocity += gravity;
 
-    if (birdY > 460 || birdY < 0) {
+    if (carY > 460 || carY < 0) {
         endGame();
     }
 
-    bird.style.top = birdY + "px";
+    car.style.top = carY + "px";
 }
 
 // 🚨 End Game Function
@@ -125,7 +126,7 @@ function endGame() {
 function useShield() {
     if (!shieldActive) {
         shieldActive = true;
-        bird.classList.add("blue-glow"); // 🔵 Blue Glow Effect
+        car.classList.add("blue-glow"); // 🔵 Blue Glow Effect
         alert("🛡 Shield Activated! You can survive one hit.");
 
         setTimeout(() => {
@@ -139,7 +140,7 @@ function useShield() {
 function useSlowMotion() {
     if (!slowMotionActive) {
         slowMotionActive = true;
-        bird.classList.add("green-glow"); // 🟢 Green Glow Effect
+        car.classList.add("green-glow"); // 🟢 Green Glow Effect
         alert("🐢 Slow Motion Activated! Pipes will move slower for 5 seconds.");
 
         setTimeout(() => {
@@ -151,8 +152,8 @@ function useSlowMotion() {
 
 // ❌ Remove Glow After Skill Ends
 function removeGlow() {
-    bird.classList.remove("blue-glow");
-    bird.classList.remove("green-glow");
+    car.classList.remove("blue-glow");
+    car.classList.remove("green-glow");
 }
 
 // 🔄 Dynamic Pipe Generation (Restart on Interval Change)
@@ -161,6 +162,24 @@ function restartPipeGeneration() {
     clearInterval(pipeGeneration);
     pipeGeneration = setInterval(createPipes, pipeInterval);
 }
+
+
+function startMusic() {
+    bgMusic.volume = 0.5;  // 🔊 Volume Set (0.0 to 1.0)
+    bgMusic.play();
+}
+
+// 🛑 Game Over Par Music Band Ho Jaye
+function endGame() {
+    isGameOver = true;
+    bgMusic.pause();
+    alert("Game Over! Score: " + score + "\nLevel: " + level);
+    location.reload();
+}
+
+// 🎮 First Jump Par Music Start Ho (Autoplay Issue Fix)
+document.addEventListener("click", startMusic, { once: true });
+document.addEventListener("touchstart", startMusic, { once: true });
 
 // ✅ Start Game Loops
 setInterval(updateGame, 20);
