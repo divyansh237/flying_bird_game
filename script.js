@@ -1,7 +1,7 @@
 const car = document.getElementById("car");
 const gameContainer = document.getElementById("game-container");
 const scoreDisplay = document.getElementById("score");
-const bgMusic = document.getElementById("bg-music");
+const bgMusic = document.getElementById("bgmusic");
 
 let carY = 200;
 let velocity = 0;
@@ -12,10 +12,10 @@ let pipeSpeed = 2;
 let level = 1;
 let shieldActive = false;
 let slowMotionActive = false;
-let pipeInterval = 1500; // ⏳ Pipe generation interval
+let pipeInterval = 1500;
 const gap = 150;
 
-// 🕹 Jump function (Works on keyboard & touch)
+// 🎮 Jump function (Keyboard & Touch Support)
 function jump() {
     if (!isGameOver) {
         velocity = -7;
@@ -32,7 +32,7 @@ document.addEventListener("keydown", (event) => {
 document.addEventListener("click", jump);
 document.addEventListener("touchstart", jump);
 
-// 🎯 Create Pipes with Upper & Lower Obstacles
+// 🎯 Create Pipes (Upper & Lower Obstacles)
 function createPipes() {
     if (isGameOver) return;
 
@@ -66,12 +66,15 @@ function createPipes() {
         upperPipe.style.right = pipeX + speed + "px";
         lowerPipe.style.right = pipeX + speed + "px";
 
-        // ❌ Collision Detection (With Shield Support)
+        let carTop = carY;
+        let carBottom = carY + 70;
+
+        // ❌ Proper Collision Detection
         if (pipeX >= 350 && pipeX <= 400) {
-            if (birdY < upperPipeHeight || birdY + 40 > 500 - pipeHeight) {
+            if (carTop < upperPipeHeight || carBottom > 500 - pipeHeight) {
                 if (shieldActive) {
                     shieldActive = false;
-                    removeGlow();
+                    car.classList.remove("blue-glow");
                     upperPipe.remove();
                     lowerPipe.remove();
                 } else {
@@ -92,7 +95,7 @@ function createPipes() {
                 pipeSpeed += 0.5;
                 level++;
                 
-                if (pipeInterval > 800) { // ⏳ Pipe generate speed bhi increase hogi
+                if (pipeInterval > 800) {
                     pipeInterval -= 100;
                     restartPipeGeneration();
                 }
@@ -115,72 +118,41 @@ function updateGame() {
     car.style.top = carY + "px";
 }
 
-// 🚨 End Game Function
-function endGame() {
-    isGameOver = true;
-    alert("Game Over! Score: " + score + "\nLevel: " + level);
-    location.reload();
-}
-
-// 🛡 Shield Skill Activation (🔵 Blue Glow)
+// 🛡 Shield Skill
 function useShield() {
     if (!shieldActive) {
         shieldActive = true;
-        car.classList.add("blue-glow"); // 🔵 Blue Glow Effect
-        alert("🛡 Shield Activated! You can survive one hit.");
+        car.classList.add("blue-glow");
 
         setTimeout(() => {
             shieldActive = false;
-            removeGlow(); // ❌ Glow Remove
+            car.classList.remove("blue-glow");
         }, 5000);
     }
 }
 
-// 🐢 Slow Motion Skill Activation (🟢 Green Glow)
+// 🐢 Slow Motion Skill
 function useSlowMotion() {
     if (!slowMotionActive) {
         slowMotionActive = true;
-        car.classList.add("green-glow"); // 🟢 Green Glow Effect
-        alert("🐢 Slow Motion Activated! Pipes will move slower for 5 seconds.");
+        car.classList.add("green-glow");
 
         setTimeout(() => {
             slowMotionActive = false;
-            removeGlow(); // ❌ Glow Remove
+            car.classList.remove("green-glow");
         }, 5000);
     }
 }
 
-// ❌ Remove Glow After Skill Ends
-function removeGlow() {
-    car.classList.remove("blue-glow");
-    car.classList.remove("green-glow");
-}
-
-// 🔄 Dynamic Pipe Generation (Restart on Interval Change)
-let pipeGeneration;
-function restartPipeGeneration() {
-    clearInterval(pipeGeneration);
-    pipeGeneration = setInterval(createPipes, pipeInterval);
-}
-
-
-function startMusic() {
-    bgMusic.volume = 0.5;  // 🔊 Volume Set (0.0 to 1.0)
-    bgMusic.play();
-}
-
-// 🛑 Game Over Par Music Band Ho Jaye
+// 🎮 Game Over Function
 function endGame() {
+    if (isGameOver) return;
     isGameOver = true;
     bgMusic.pause();
     alert("Game Over! Score: " + score + "\nLevel: " + level);
     location.reload();
 }
 
-// 🎮 First Jump Par Music Start Ho (Autoplay Issue Fix)
-document.addEventListener("click", startMusic, { once: true });
-document.addEventListener("touchstart", startMusic, { once: true });
-
 // ✅ Start Game Loops
 setInterval(updateGame, 20);
-restartPipeGeneration();
+setInterval(createPipes, pipeInterval);
